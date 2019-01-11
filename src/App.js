@@ -8,14 +8,12 @@ class App extends Component {
         super(props);
         this.state = {
             todos: [
-                {description: 'Walk the dog', isCompleted: true},
-                {description: 'Clean your room', isCompleted: false},
-                {description: 'Finish Bloc assignments', isCompleted: false}
+                {description: 'Walk the dog', isCompleted: true, isDeleted: false},
+                {description: 'Clean your room', isCompleted: false, isDeleted: false},
+                {description: 'Finish Bloc assignments', isCompleted: false, isDeleted: false}
             ],
             newTodoDescription: ''
         };
-
-       this.deleteMessage = this.deleteMessage.bind(this);
     }
 
     handleChange(e){
@@ -25,7 +23,7 @@ class App extends Component {
     handleSubmit(e){
       e.preventDefault();
       if (!this.state.newTodoDescription) {return}
-      const newTodo = {description: this.state.newTodoDescription, isCompleted: false};
+      const newTodo = {description: this.state.newTodoDescription, isCompleted: false, isDeleted: false};
       this.setState({ todos: [...this.state.todos, newTodo], newTodoDescription: ''});
     }
 
@@ -38,8 +36,13 @@ class App extends Component {
     }
 
 
-    deleteMessage() {
-        this.setState({ todos:[] })
+
+    deleteTodo(index){
+      const todos2 = this.state.todos.filter(function(deletedItem){
+      return deletedItem.isDeleted === false});
+      const todo2 = todos2[index];
+      todo2.isDeleted = todo2.isDeleted ? false: true;
+      this.setState({todos: todos2});
     }
 
 
@@ -54,7 +57,7 @@ class App extends Component {
                             description={todo.description}
                             isCompleted={todo.isCompleted}
                             toggleComplete={ () => this.toggleComplete(index)}
-                            deleteMessage={this.deleteMessage}
+                            deleteTodo={() => this.deleteTodo(index)}
                         />
                     )
                 }
