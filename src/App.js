@@ -8,25 +8,31 @@ class App extends Component {
         super(props);
         this.state = {
             todos: [
-                {description: 'Walk the dog', isCompleted: true, isDeleted: false},
-                {description: 'Clean your room', isCompleted: false, isDeleted: false},
-                {description: 'Finish Bloc assignments', isCompleted: false, isDeleted: false}
+              {description: 'Walk The Dog', isCompleted: true},
+              {description: 'Clean Your Room', isCompleted: false},
+              {description: 'Finish Bloc Assignments', isCompleted: false}
             ],
             newTodoDescription: ''
         };
+        this.deleteTodo = this.deleteTodo.bind(this);
+    }
+
+    deleteTodo(index) {
+      const todos2 = this.state.todos.filter((deletedItem, i) => i !== index);
+
+      this.setState({todos: todos2});
     }
 
     handleChange(e){
-      this.setState({ newTodoDescription: e.target.value})
+      this.setState({ newTodoDescription: e.target.value});
     }
 
     handleSubmit(e){
       e.preventDefault();
       if (!this.state.newTodoDescription) {return}
-      const newTodo = {description: this.state.newTodoDescription, isCompleted: false, isDeleted: false};
+      const newTodo = {description: this.state.newTodoDescription, isCompleted: false};
       this.setState({ todos: [...this.state.todos, newTodo], newTodoDescription: ''});
     }
-
 
     toggleComplete(index){
       const todos = this.state.todos.slice();
@@ -35,31 +41,21 @@ class App extends Component {
       this.setState({todos: todos});
     }
 
-
-
-    deleteTodo(index){
-      const todos2 = this.state.todos.filter(function(deletedItem){
-      return deletedItem.isDeleted === false});
-      const todo2 = todos2[index];
-      todo2.isDeleted = todo2.isDeleted ? false: true;
-      this.setState({todos: todos2});
-    }
-
-
     render() {
         return (
           <div className="App">
             <ul>
                 {
-                    this.state.todos.map((todo, index) =>
-                        <ToDo
-                            key={index}
-                            description={todo.description}
-                            isCompleted={todo.isCompleted}
-                            toggleComplete={ () => this.toggleComplete(index)}
-                            deleteTodo={() => this.deleteTodo(index)}
-                        />
-                    )
+                    this.state.todos.map((todo, index) => (
+                      <ToDo
+                          key={`${todo.description.toLowerCase().replace(/ /g, '-')}-${index}`}
+                          description={todo.description}
+                          isCompleted={todo.isCompleted}
+                          toggleComplete={ () => this.toggleComplete(index)}
+                          deleteTodo={() => this.deleteTodo(index)}
+
+                      />
+                    ))
                 }
             </ul>
             <form onSubmit={ (e) => this.handleSubmit(e) }>
