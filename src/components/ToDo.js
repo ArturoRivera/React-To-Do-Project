@@ -8,6 +8,7 @@ class ToDo extends Component {
             <span>{this.props.description}</span>
             <div onClick={this.props.deleteMessage}>Delete</div>
             </li>
+            
         );
     }
 }
